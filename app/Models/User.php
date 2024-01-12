@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -100,4 +101,17 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    // TODO:
+
+    // --------------------------
+    // Encryption
+    // --------------------------
+    // public function getEmailAttribute($value) {
+    //     return Crypt::decryptString($value);
+    // }
+
+    // public function setEmailAttribute($value) {
+    //     $this->attributes['email'] = Crypt::encryptString($value);
+    // }
 }
