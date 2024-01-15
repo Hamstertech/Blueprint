@@ -24,7 +24,6 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         $token = $user->createToken('authToken')->plainTextToken;
         $user->update(['last_login' => Carbon::now()]);
-        $user->payment_level = $user->activeSubscription();
 
         return response()->json(['token' => $token, 'user' => new UserResource($user)]);
     }
