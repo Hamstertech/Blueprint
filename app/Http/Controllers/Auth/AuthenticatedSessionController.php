@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Resources\UserResource;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -16,16 +13,13 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): JsonResponse
+    public function store(LoginRequest $request): Response
     {
         $request->authenticate();
 
-        /** @var User $user */
-        $user = $request->user();
-        $token = $user->createToken('authToken')->plainTextToken;
-        $user->update(['last_login' => Carbon::now()]);
+        $request->session()->regenerate();
 
-        return response()->json(['token' => $token, 'user' => new UserResource($user)]);
+        return response()->noContent();
     }
 
     /**
@@ -33,13 +27,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $request->user()->tokens()->delete();
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         return response()->noContent();
-    }
-
-    public function me(): UserResource
-    {
-        return new UserResource(Auth::user());
     }
 }

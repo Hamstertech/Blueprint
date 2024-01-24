@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\User;
-use App\Models\Workshop;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vehicles', function (Blueprint $table) {
+        Schema::create('mot_stations', function (Blueprint $table) {
             $table->id();
-            $table->string('licence');
-            $table->foreignIdFor(User::class)->constrained();
-            $table->foreignIdFor(Workshop::class)->constrained();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicles');
+        Schema::dropIfExists('mot_stations');
     }
 };
