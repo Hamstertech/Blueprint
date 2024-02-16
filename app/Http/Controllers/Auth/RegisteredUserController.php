@@ -2,40 +2,31 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\CreateUserAction;
+use App\DataTransferObjects\StoreUserData;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\HtmlString;
 
 class RegisteredUserController extends Controller
 {
+
+    public function __construct(
+        protected CreateUserAction $createUserAction,
+    ) {
+    }
+
     /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $user = $this->createUserAction->execute(StoreUserData::fromRequest($request));
+        $response = "<p>Successful Sign Up</p><p>We've sent a verification email to: {$user->email}</p>";
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return response()->noContent();
+        return response()->json(['message' => clean(new HtmlString($response))]);
     }
 }

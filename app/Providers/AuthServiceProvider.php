@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\FrontendService;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,7 +26,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
-            return config('app.frontend_url')."/auth/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
+            return (new FrontendService)->create("auth/password-reset?token=$token&email={$notifiable->getEmailForPasswordReset()}");
+        });
+
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+            $token = sha1($notifiable->getEmailForVerification());
+
+            return (new FrontendService)->create("auth/verify?id={$notifiable->getKey()}&token={$token}");
         });
 
         //
