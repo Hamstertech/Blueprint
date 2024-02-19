@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateUserAction;
-use App\Actions\UpdateUserAction;
+use App\Actions\Users\CreateUserAction;
+use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\UpdateUserAction;
 use App\DataTransferObjects\StoreUserData;
 use App\DataTransferObjects\UpdateUserData;
 use App\Http\Requests\StoreUserRequest;
@@ -18,7 +19,8 @@ class UserController extends Controller
 {
     public function __construct(
         protected CreateUserAction $createUserAction,
-        protected UpdateUserAction $updateUserAction
+        protected UpdateUserAction $updateUserAction,
+        protected DeleteUserAction $deleteUserAction,
     ) {
     }
 
@@ -73,7 +75,7 @@ class UserController extends Controller
     public function destroy(User $user): JsonResponse
     {
         $this->authorize('delete', $user);
-        $user->delete();
+        $this->deleteUserAction->execute($user);
 
         return response()->json(['message' => 'User deleted.']);
     }

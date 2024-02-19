@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\CreateUserAction;
+use App\Actions\Users\CreateUserAction;
 use App\DataTransferObjects\StoreUserData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
@@ -11,7 +11,6 @@ use Illuminate\Support\HtmlString;
 
 class RegisteredUserController extends Controller
 {
-
     public function __construct(
         protected CreateUserAction $createUserAction,
     ) {

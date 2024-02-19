@@ -1,47 +1,54 @@
 <?php
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use App\Services\FrontendService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
+use function Pest\Laravel\actingAs;
+
 uses(RefreshDatabase::class);
 
 it('email can be verified', function () {
+    Event::fake();
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
 
-    Event::fake();
+    $token = sha1($user->getEmailForVerification());
 
-    $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1($user->email)]
-    );
+    $data = [
+        'id' => $user->id,
+        'token' => $token,
+        'password' => 'testpassword',
+        'password_confirmation' => 'testpassword',
+    ];
 
-    $response = $this->actingAs($user)->get($verificationUrl);
+    $this->postJson(route('verification.verify'), $data)
+        ->assertJsonPath('message', 'Successfully verified.');
 
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-    $response->assertRedirect((new FrontendService)->create('?verified=1'));
-})->only();
+});
 
-it('email is not verified with invalid hash', function () {
+it('email is not verified with invalid token', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
 
-    $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1('wrong-email')]
-    );
+    $token = sha1('somerandomemail@test.test');
 
-    $this->actingAs($user)->get($verificationUrl);
+    $data = [
+        'id' => $user->id,
+        'token' => $token,
+        'password' => 'testpassword',
+        'password_confirmation' => 'testpassword',
+    ];
+
+    $this->postJson(route('verification.verify'), $data)
+        ->assertJsonPath('message', 'This action is unauthorized.');
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-})->todo();
+});

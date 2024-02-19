@@ -13,24 +13,24 @@ it('users can authenticate using the login screen', function () {
         'email' => $user->email,
         'password' => 'password',
     ])
-    ->assertJsonStructure([
-        'data' => [
-            'id',
-            'name',
-            'email',
-            'role',
-            'created_at',
-            'email_verified_at',
-            'last_login',
-            'token'
-        ],
-    ])
-    ->assertJsonPath('data.id', $user->id)
-    ->assertJsonPath('data.name', $user->name)
-    ->assertJsonPath('data.email', $user->email)
-    ->assertJsonPath('data.role', $user->role->value)
-    ->assertJsonPath('data.created_at', Carbon::parse($user->created_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'))
-    ->assertJsonPath('data.email_verified_at', Carbon::parse($user->email_verified_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'));
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'role',
+                'created_at',
+                'email_verified_at',
+                'last_login',
+                'token',
+            ],
+        ])
+        ->assertJsonPath('data.id', $user->id)
+        ->assertJsonPath('data.name', $user->name)
+        ->assertJsonPath('data.email', $user->email)
+        ->assertJsonPath('data.role', $user->role->value)
+        ->assertJsonPath('data.created_at', Carbon::parse($user->created_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'))
+        ->assertJsonPath('data.email_verified_at', Carbon::parse($user->email_verified_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'));
 
     $this->assertAuthenticated();
 });

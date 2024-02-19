@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserTypeEnum;
+use App\Interfaces\DropdownModel;
 use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements DropdownModel, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -46,6 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'last_login' => 'datetime',
         'password' => 'hashed',
+        'role' => UserTypeEnum::class,
     ];
 
     // --------------------------
@@ -72,8 +74,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role->value === UserTypeEnum::Admin->value;
     }
 
-    public function isGarage(): bool
+    public function isGuest(): bool
     {
         return $this->role->value === UserTypeEnum::Guest->value;
+    }
+
+    // --------------------------
+    // INTERFACES
+    // --------------------------
+    public function getDropdownValue(): mixed
+    {
+        return $this->id;
+    }
+
+    public function getDropdownText(): string
+    {
+        return $this->name;
     }
 }
