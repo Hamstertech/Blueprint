@@ -3,10 +3,9 @@
 namespace App\DataTransferObjects;
 
 use App\Enums\UserTypeEnum;
-use App\Http\Requests\RegisterUserRequest;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
-class StoreUserData
+class UpdateUserData
 {
     public function __construct(
         public readonly string $name,
@@ -16,7 +15,7 @@ class StoreUserData
     ) {
     }
 
-    public static function fromRequest(RegisterUserRequest|StoreUserRequest $request): self
+    public static function fromRequest(UpdateUserRequest $request): self
     {
         return new self(
             name: $request->validated('name'),

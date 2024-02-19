@@ -1,23 +1,44 @@
 <?php
 
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('users can authenticate using the login screen', function () {
+uses(RefreshDatabase::class);
+
+it('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
-    $response = $this->post('/login', [
+    $this->postJson(route('login'), [
         'email' => $user->email,
         'password' => 'password',
-    ]);
+    ])
+    ->assertJsonStructure([
+        'data' => [
+            'id',
+            'name',
+            'email',
+            'role',
+            'created_at',
+            'email_verified_at',
+            'last_login',
+            'token'
+        ],
+    ])
+    ->assertJsonPath('data.id', $user->id)
+    ->assertJsonPath('data.name', $user->name)
+    ->assertJsonPath('data.email', $user->email)
+    ->assertJsonPath('data.role', $user->role->value)
+    ->assertJsonPath('data.created_at', Carbon::parse($user->created_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'))
+    ->assertJsonPath('data.email_verified_at', Carbon::parse($user->email_verified_at)->setTimezone('UTC')->format('Y-m-d\TH:i:s.u\Z'));
 
     $this->assertAuthenticated();
-    $response->assertNoContent();
 });
 
-test('users can not authenticate with invalid password', function () {
+it('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $this->postJson(route('login'), [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);
@@ -25,11 +46,17 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
-test('users can logout', function () {
+it('users can logout', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post('/logout');
+    $res = $this->postJson(route('login'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
 
-    $this->assertGuest();
-    $response->assertNoContent();
+    $this->withHeader('Authorization', 'Bearer '.$res['data']['token'])
+        ->actingAs($user, 'sanctum')
+        ->withMiddleware()
+        ->postJson(route('logout'))
+        ->assertJsonPath('message', 'Logged out.');
 });

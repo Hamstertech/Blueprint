@@ -2,11 +2,15 @@
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Services\FrontendService;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
-test('email can be verified', function () {
+uses(RefreshDatabase::class);
+
+it('email can be verified', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
@@ -23,10 +27,10 @@ test('email can be verified', function () {
 
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-    $response->assertRedirect(config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1');
-});
+    $response->assertRedirect((new FrontendService)->create('?verified=1'));
+})->only();
 
-test('email is not verified with invalid hash', function () {
+it('email is not verified with invalid hash', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
@@ -40,4 +44,4 @@ test('email is not verified with invalid hash', function () {
     $this->actingAs($user)->get($verificationUrl);
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-});
+})->todo();

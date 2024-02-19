@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\UserTypeEnum;
+use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,6 +44,36 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // --------------------------
+    // QUERY BUILDER
+    // --------------------------
+    public static function query(): UserQueryBuilder
+    {
+        /** @var UserQueryBuilder $query */
+        $query = parent::query();
+
+        return $query;
+    }
+
+    public function newEloquentBuilder($query): UserQueryBuilder
+    {
+        return new UserQueryBuilder($query);
+    }
+
+    // --------------------------
+    // HELPERS
+    // --------------------------
+    public function isAdmin(): bool
+    {
+        return $this->role->value === UserTypeEnum::Admin->value;
+    }
+
+    public function isGarage(): bool
+    {
+        return $this->role->value === UserTypeEnum::Guest->value;
+    }
 }

@@ -11,9 +11,11 @@ class FrontendService
         $this->base = config('app.frontend_url');
     }
 
-    public function create(string $path = '')
+    public function create(string $path = '', array $query = [])
     {
-        return $this->base.$path;
+        $query = count($query) ? '?'.http_build_query($query) : '';
+
+        return $this->base.$path.$query;
     }
 
     public function login()

@@ -25,9 +25,9 @@ class EmailVerificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'id' => ['required'],
             'token' => ['required'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }
 }

@@ -1,13 +1,26 @@
 <?php
 
-test('new users can register', function () {
-    $response = $this->post('/register', [
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
+
+uses(RefreshDatabase::class);
+
+it('new users can register', function () {
+    Event::fake();
+    Notification::fake();
+
+    $data = [
         'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'email' => 'sky.etherington@ne6.studio',
+        'phone' => '+447777777777',
+    ];
+
+    $this->post(route('register'), $data)->assertJsonStructure([
+        'message',
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertNoContent();
+    $this->assertGuest();
+    Event::assertDispatched(Registered::class);
 });
