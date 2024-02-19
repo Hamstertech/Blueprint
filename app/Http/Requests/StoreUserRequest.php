@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserTypeEnum;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', User::class);
     }
 
     /**
@@ -22,9 +25,10 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users,email'],
-            'phone' => ['required', 'string', 'max:255', 'phone:INTERNATIONAL,GB'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|email:rfc,dns|max:255|unique:users,email',
+            'phone' => 'required|max:255|phone:INTERNATIONAL,GB',
+            'role' => ['required', 'string', Rule::enum(UserTypeEnum::class)],
         ];
     }
 }

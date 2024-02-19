@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->user);
     }
 
     /**
@@ -22,9 +24,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users,email'],
-            'phone' => ['required', 'string', 'max:255', 'phone:INTERNATIONAL,GB'],
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'email:rfc,dns', 'max:255', Rule::unique('users')->ignore($this->id)],
+            'phone' => 'required|max:255|phone:INTERNATIONAL,GB',
+            'role' => ['required', 'string', Rule::enum(UserTypeEnum::class)],
         ];
     }
 }
