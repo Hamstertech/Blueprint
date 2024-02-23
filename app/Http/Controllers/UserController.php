@@ -5,15 +5,21 @@ namespace App\Http\Controllers;
 use App\Actions\Users\CreateUserAction;
 use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\UpdateUserAction;
+use App\Actions\Users\UpdateUserPasswordAction;
 use App\DataTransferObjects\StoreUserData;
 use App\DataTransferObjects\UpdateUserData;
+use App\DataTransferObjects\UpdateUserPasswordData;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\DropdownResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -21,6 +27,7 @@ class UserController extends Controller
         protected CreateUserAction $createUserAction,
         protected UpdateUserAction $updateUserAction,
         protected DeleteUserAction $deleteUserAction,
+        protected UpdateUserPasswordAction $updateUserPasswordAction,
     ) {
     }
 
@@ -78,5 +85,25 @@ class UserController extends Controller
         $this->deleteUserAction->execute($user);
 
         return response()->json(['message' => 'User deleted.']);
+    }
+
+    /**
+     * Update the specified users password.
+     */
+    public function updatePassword(UpdateUserPasswordRequest $request, User $user): UserResource|JsonResponse
+    {
+        $res = $this->updateUserPasswordAction->execute(UpdateUserPasswordData::fromRequest($request), $user);
+
+        return $res instanceof User
+            ? new UserResource($user)
+            : response()->json(['message' => $res])->setStatusCode(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Display users as dropdowns.
+     */
+    public function getDropdown(): AnonymousResourceCollection
+    {
+        return DropdownResource::collection(User::get());
     }
 }

@@ -35,7 +35,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->isAdmin();
+        return $model->is($user);
     }
 
     /**
@@ -44,5 +44,13 @@ class UserPolicy
     public function delete(User $user, User $model): bool
     {
         return $user->isAdmin();
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function updatePassword(User $user, User $model): bool
+    {
+        return $model->is($user);
     }
 }

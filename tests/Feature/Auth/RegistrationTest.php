@@ -14,7 +14,6 @@ it('can register new users', function () {
     $data = [
         'name' => 'Test User',
         'email' => 'sky.etherington@ne6.studio',
-        'phone' => '+447777777777',
     ];
 
     $this->post(route('register'), $data)->assertJsonStructure([

@@ -10,7 +10,6 @@ class UpdateUserData
     public function __construct(
         public readonly string $name,
         public readonly string $email,
-        public readonly string $phone,
         public readonly UserTypeEnum $role,
     ) {
     }
@@ -20,7 +19,6 @@ class UpdateUserData
         return new self(
             name: $request->validated('name'),
             email: $request->validated('email'),
-            phone: $request->validated('phone'),
             role: UserTypeEnum::tryFrom($request->validated('role')) ?? UserTypeEnum::Guest,
         );
     }

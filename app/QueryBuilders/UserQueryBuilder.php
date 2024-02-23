@@ -18,8 +18,7 @@ class UserQueryBuilder extends Builder
     {
         return $this->when($q, fn (self $builder) => $builder->where(function (self $query) use ($q) {
             $query->where('name', 'LIKE', ["%$q%"])
-                ->orWhere('email', 'LIKE', ["%$q%"])
-                ->orWhere('phone', 'LIKE', ["%$q%"]);
+                ->orWhere('email', 'LIKE', ["%$q%"]);
         }));
     }
 
