@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
-it('reset password link can be requested', function () {
+it('can handle sending reset password link', function () {
     Notification::fake();
 
     $user = User::factory()->create();
@@ -17,7 +17,7 @@ it('reset password link can be requested', function () {
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-it('password can be reset with valid token', function () {
+it('can be reset with valid token', function () {
     Notification::fake();
 
     $user = User::factory()->create();
@@ -25,7 +25,7 @@ it('password can be reset with valid token', function () {
     $this->post(route('password.email'), ['email' => $user->email]);
 
     Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
-        $response = $this->post('/reset-password', [
+        $response = $this->post(route('password.store'), [
             'token' => $notification->token,
             'email' => $user->email,
             'password' => 'password',

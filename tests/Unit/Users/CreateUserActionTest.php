@@ -6,14 +6,13 @@ use App\DataTransferObjects\StoreUserData;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Notification;
-use Mockery\MockInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Mockery\MockInterface;
 
 uses(RefreshDatabase::class);
 
-it('create admin action', function () {
+it('can create admin action', function () {
     Event::fake();
     $data = new StoreUserData(
         name: 'Testerson',
@@ -39,7 +38,7 @@ it('create admin action', function () {
     Event::assertDispatched(Registered::class);
 });
 
-it('create guest action', function () {
+it('can create guest action', function () {
     Event::fake();
     $data = new StoreUserData(
         name: 'Testerson',

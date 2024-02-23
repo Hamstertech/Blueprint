@@ -1,17 +1,13 @@
 <?php
 
 use App\Models\User;
-use App\Services\FrontendService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
-
-use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
 
-it('email can be verified', function () {
+it('can verify email', function () {
     Event::fake();
     $user = User::factory()->create([
         'email_verified_at' => null,
@@ -33,7 +29,7 @@ it('email can be verified', function () {
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
 });
 
-it('email is not verified with invalid token', function () {
+it('can not verify email with invalid token', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);

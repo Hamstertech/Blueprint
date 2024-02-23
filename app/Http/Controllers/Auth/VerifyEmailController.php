@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class VerifyEmailController extends Controller
@@ -31,6 +32,6 @@ class VerifyEmailController extends Controller
             'password' => Hash::make($request->validated('password')),
         ]);
 
-        return response()->json(['message' => 'Successfully verified.']);
+        return response()->json(['message' => 'Successfully verified.', Response::HTTP_ACCEPTED]);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('deletes guest user action', function () {
+it('can delete guest user action', function () {
     $user = User::factory()->create(['password' => 'testpassword']);
     $action = new DeleteUserAction;
     $res = $action->execute($user);
@@ -14,7 +14,7 @@ it('deletes guest user action', function () {
     expect($res)->toBeTruthy();
 });
 
-it('deletes admin user action', function () {
+it('can delete admin user action', function () {
     $user = User::factory()->admin()->create();
     $action = new DeleteUserAction;
     $res = $action->execute($user);

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
-it('new users can register', function () {
+it('can register new users', function () {
     Event::fake();
     Notification::fake();
 

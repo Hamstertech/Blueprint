@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('users can authenticate using the login screen', function () {
+it('can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
     $this->postJson(route('login'), [
@@ -35,7 +35,7 @@ it('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
 });
 
-it('users can not authenticate with invalid password', function () {
+it('can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
     $this->postJson(route('login'), [
@@ -46,7 +46,7 @@ it('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
-it('users can logout', function () {
+it('can logout', function () {
     $user = User::factory()->create();
 
     $res = $this->postJson(route('login'), [

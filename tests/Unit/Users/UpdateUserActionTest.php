@@ -5,12 +5,12 @@ use App\Actions\Users\UpdateUserAction;
 use App\DataTransferObjects\UpdateUserData;
 use App\Enums\UserTypeEnum;
 use App\Models\User;
-use Mockery\MockInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery\MockInterface;
 
 uses(RefreshDatabase::class);
 
-it('update admin action', function () {
+it('can update admin action', function () {
     $admin = User::factory()->admin()->create();
 
     $data = new UpdateUserData(
@@ -35,7 +35,7 @@ it('update admin action', function () {
     expect($user->role)->toEqual($data->role);
 });
 
-it('update guest action', function () {
+it('can update guest action', function () {
     $guest = User::factory()->guest()->create();
 
     $data = new UpdateUserData(
