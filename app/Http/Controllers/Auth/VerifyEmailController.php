@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\EmailVerificationRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\FrontendService;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class VerifyEmailController extends Controller
@@ -16,9 +17,16 @@ class VerifyEmailController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function __invoke(EmailVerificationRequest $request): JsonResponse
+    public function __invoke(EmailVerificationRequest $request): UserResource
     {
         $user = User::find($request->validated('id'));
+
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified.',
+                'url' => (new FrontendService)->login(),
+            ]);
+        }
 
         if (! hash_equals((string) $request->validated('token'), sha1($user->getEmailForVerification()))) {
             throw new AuthorizationException();
@@ -30,8 +38,12 @@ class VerifyEmailController extends Controller
 
         $user->update([
             'password' => Hash::make($request->validated('password')),
+            'last_login' => Carbon::now(),
         ]);
 
-        return response()->json(['message' => 'Successfully verified.', Response::HTTP_ACCEPTED]);
+        $token = $user->createToken('authToken')->plainTextToken;
+        $user->token = $token;
+
+        return new UserResource($user);
     }
 }
