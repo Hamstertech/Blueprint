@@ -21,7 +21,8 @@ class VerifyEmailController extends Controller
     {
         $user = User::find($request->validated('id'));
 
-        if ($request->user()->hasVerifiedEmail()) {
+
+        if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'message' => 'Email already verified.',
                 'url' => (new FrontendService)->login(),

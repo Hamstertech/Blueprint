@@ -23,7 +23,18 @@ it('can verify email', function () {
     ];
 
     $this->postJson(route('verification.verify'), $data)
-        ->assertJsonPath('message', 'Successfully verified.');
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'role',
+                'created_at',
+                'last_login',
+                'email_verified_at',
+                'token',
+            ],
+        ]);
 
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
