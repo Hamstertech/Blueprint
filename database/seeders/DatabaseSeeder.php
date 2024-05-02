@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Enums\UserTypeEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,10 +17,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate([
-            'email' => 'valuarmail@pm.me',
+            'email' => 'test@test.test',
         ], [
             'name' => 'Sky',
-            'user_type' => UserTypeEnum::Admin->value,
+            'role' => UserTypeEnum::Admin->value,
             'email_verified_at' => now(),
             'password' => Hash::make('testpassword1'),
         ]);

@@ -26,6 +26,7 @@ class User extends Authenticatable implements DropdownModel, MustVerifyEmail
         'email',
         'password',
         'role',
+        'last_login',
     ];
 
     /**

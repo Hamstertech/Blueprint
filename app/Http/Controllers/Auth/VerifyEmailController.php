@@ -21,7 +21,6 @@ class VerifyEmailController extends Controller
     {
         $user = User::find($request->validated('id'));
 
-
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'message' => 'Email already verified.',
