@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BattleshipController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return ['Laravel' => app()->version(), 'PHP' => phpversion()];
+    return view('app');
+    // return ['Laravel' => app()->version(), 'PHP' => phpversion()];
 });
+
+Route::get('/information', function () {
+    return '<p>Hello world! '.random_int(0, 10000).' </p>';
+})->name('information');
+
+Route::get('/battleship/attack', [BattleshipController::class, 'attackBattleship'])->name('battleship.attack');
+Route::get('/battleship/defend', [BattleshipController::class, 'defendBattleship'])->name('battleship.defend');

@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
+        "mauricius/laravel-htmx": "^0.6.0",
         "mews/purifier": "^3.4",
         "propaganistas/laravel-phone": "^5.1"
     },
