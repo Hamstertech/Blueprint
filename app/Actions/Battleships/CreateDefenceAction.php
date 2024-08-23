@@ -32,7 +32,7 @@ class CreateDefenceAction
             $map = $this->placeShips($map);
         }
 
-        Cache::put('battleship_player'.session()->getId(), json_encode($map), 600);
+        // Cache::put('battleship_player_'.session()->getId(), json_encode($map), 600);
 
         return $map;
     }

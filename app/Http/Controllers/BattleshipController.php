@@ -16,9 +16,9 @@ class BattleshipController extends Controller
 
     public function attackBattleship(HtmxRequest $request)
     {
-        $map = $this->createDefenceAction->execute();
+        $map = $this->createAttackAction->execute();
 
-        return view('battleship-attack', ['alphabet' => $map]);
+        return view('battleship-attack', ['attack_map' => $map]);
     }
 
     public function defendBattleship(HtmxRequest $request)
