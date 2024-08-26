@@ -6,10 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Player extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'session_id',
+    ];
 
     // --------------------------
     // QUERY BUILDER
@@ -28,9 +33,25 @@ class Player extends Model
         return $this->belongsToMany(Game::class);
     }
 
+    public function sharedGamesWith(Player $player)
+    {
+        return $this->games()
+            ->whereHas('players', function ($query) use ($player) {
+                $query->where('players.session_id', $player->session_id);
+            })->first();
+    }
+
     // --------------------------
     // HELPERS
     // --------------------------
+    public function sharesGameWith(Player $player)
+    {
+        return $this->games()
+            ->whereHas('players', function ($query) use ($player) {
+                $query->where('players.session_id', $player->session_id);
+            })
+            ->exists();
+    }
 
     // --------------------------
     // INTERFACES

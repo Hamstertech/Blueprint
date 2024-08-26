@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Player::class);
             $table->foreignIdFor(Game::class);
-            $table->foreignId('winner_id')->constrained('players');
+            $table->foreignId('winner_id')->nullable()->constrained('players');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

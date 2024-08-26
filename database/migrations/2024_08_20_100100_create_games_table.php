@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->string('game_type');
+            $table->json('game_state');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

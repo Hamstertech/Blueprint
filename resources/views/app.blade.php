@@ -15,13 +15,12 @@
 
     <body class="overflow-y-scroll">
         {{-- <h1 class="flex justify-center text-6xl text-black pt-10">Battleship</h1> --}}
-        <div class="flex justify-center px-10 py-10 w-full">
-            <div
-                hx-get="{{ route('battleship.attack') }}"
-                hx-trigger="load"
-                hx-swap="innerHTML"
-                class="flex justify-center text-black"></div>
-        </div>
+        <a class="hover:bg-blue-300">Restart // TODO:</a>
+        <div
+            hx-get="{{ route('game.battleship.generate') }}"
+            hx-trigger="load"
+            hx-swap="innerHTML"
+            class="flex justify-center text-black"></div>
 
         {{-- <div class="flex justify-center px-10 py-10 w-full">
             <div
