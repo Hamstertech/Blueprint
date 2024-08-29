@@ -21,12 +21,12 @@ class CreateBattleshipLayout extends GameState
         ]);
         $games = $player1->sharedGamesWith($player2, GameTypeEnum::BATTLESHIP);
         if (!empty($games)) {
-            $map = json_decode($games->latest()->first()->game_state, true);
+            $map = $games->latest()->first()->game_state;
         } else {
             $map = $this->gameState($player1, $player2);
             $newGame = new Game;
             $newGame->game_type = GameTypeEnum::BATTLESHIP;
-            $newGame->game_state = json_encode($map);
+            $newGame->game_state = $map;
             $newGame->save();
 
             $newGame->linkPlayers($player1, $player2);

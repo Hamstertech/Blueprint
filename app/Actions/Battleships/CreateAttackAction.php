@@ -17,11 +17,15 @@ class CreateAttackAction extends GameState
         $game = $player->runningGame(GameTypeEnum::BATTLESHIP);
         $opponent_id = $game->players()->wherePivot('player_id', '!=', $player->id)->first()->id;
 
-        $gameState = json_decode($game->game_state);
+        $gameState = $game->game_state;
         $cleanFieldId = ltrim($fieldId, 'A');
-        if (in_array($gameState->board->$opponent_id->$cleanFieldId->value, [...array_keys(parent::ships()), ''])) {
+        if (in_array($gameState->board->$opponent_id->$cleanFieldId->value, array_keys(parent::ships()))) {
             $gameState->board->$opponent_id->$cleanFieldId->value = 'X';
-            $game->game_state = json_encode($gameState);
+            $game->game_state = $gameState;
+            $game->save();
+        } elseif (in_array($gameState->board->$opponent_id->$cleanFieldId->value, [''])) {
+            $gameState->board->$opponent_id->$cleanFieldId->value = 'O';
+            $game->game_state = $gameState;
             $game->save();
         }
 
