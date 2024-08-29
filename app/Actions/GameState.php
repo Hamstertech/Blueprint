@@ -2,13 +2,15 @@
 
 namespace App\Actions;
 
+use App\Models\Player;
+
 abstract class GameState
 {
-    protected function newGame(): array
+    protected function newGame(Player $player): array
     {
         return [
             'round' => 0,
-            'turn' => 0,
+            'turn' => $player->id,
         ];
     }
 

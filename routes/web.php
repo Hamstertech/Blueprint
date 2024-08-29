@@ -23,6 +23,6 @@ Route::get('/information', function () {
     return '<p>Hello world! '.random_int(0, 10000).' </p>';
 })->name('information');
 
-Route::post('/game/battleship/attack', [BattleshipController::class, 'attackBattleship'])->name('game.battleship.attack');
-// Route::get('/battleship/defend', [BattleshipController::class, 'defendBattleship'])->name('battleship.defend');
+Route::get('/game/battleship/attack', [BattleshipController::class, 'attackBattleship'])->name('game.battleship.attack');
 Route::get('/game/battleship/generate', [BattleshipController::class, 'newGameBattleship'])->name('game.battleship.generate');
+// Route::get('/battleship/defend', [BattleshipController::class, 'defendBattleship'])->name('battleship.defend');

@@ -3,24 +3,28 @@
 namespace App\Actions\Battleships;
 
 use App\Actions\GameState;
+use App\Enums\GameTypeEnum;
+use App\Models\Player;
 
 class CreateAttackAction extends GameState
 {
-    public function execute(): array
+    public function execute(string $fieldId): bool
     {
-        $map = $this->gameState();
+        /** @var Player $player */
+        $player = Player::firstOrCreate([
+            'session_id' => session()->getId(),
+        ]);
+        $game = $player->runningGame(GameTypeEnum::BATTLESHIP);
+        $opponent_id = $game->players()->wherePivot('player_id', '!=', $player->id)->first()->id;
 
-        return $map;
-    }
+        $gameState = json_decode($game->game_state);
+        $cleanFieldId = ltrim($fieldId, 'A');
+        if (in_array($gameState->board->$opponent_id->$cleanFieldId->value, [...array_keys(parent::ships()), ''])) {
+            $gameState->board->$opponent_id->$cleanFieldId->value = 'X';
+            $game->game_state = json_encode($gameState);
+            $game->save();
+        }
 
-    protected function gameState(): array
-    {
-        return [
-            ...parent::newGame(),
-            'board' => [
-                0 => parent::boardLayoutBattleShip(),
-                1 => parent::boardLayoutBattleShip(),
-            ],
-        ];
+        return $game->fresh();
     }
 }

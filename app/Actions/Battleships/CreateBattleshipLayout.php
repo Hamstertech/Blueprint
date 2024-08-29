@@ -19,9 +19,9 @@ class CreateBattleshipLayout extends GameState
         $player2 = Player::firstOrCreate([
             'session_id' => 'tester',
         ]);
-        $games = $player1->sharedGamesWith($player2);
+        $games = $player1->sharedGamesWith($player2, GameTypeEnum::BATTLESHIP);
         if (!empty($games)) {
-            $map = $games->first()->game_state;
+            $map = json_decode($games->latest()->first()->game_state, true);
         } else {
             $map = $this->gameState($player1, $player2);
             $newGame = new Game;
@@ -39,7 +39,7 @@ class CreateBattleshipLayout extends GameState
     {
         // TODO: Make a "continued game state" to make sure you can hide opponent information when sending information
         return [
-            ...parent::newGame(),
+            ...parent::newGame($player1),
             'board' => [
                 $player1->id => parent::boardLayoutBattleShip(),
                 $player2->id => parent::boardLayoutBattleShip(),
