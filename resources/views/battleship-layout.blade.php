@@ -1,4 +1,4 @@
-<div class="flex justify-center px-10 py-10 w-full">
+<div id="battle-layout" class="flex justify-center px-10 py-10 w-full">
     <div>
         @foreach($map['board'] as $board)
             @if($loop->index === 0)
@@ -8,6 +8,9 @@
                         @foreach($board as $key => $value)
                             <a id="A{{ $loop->iteration }}"
                                 hx-get="{{ route('game.battleship.attack') }}"
+                                hx-trigger="click"
+                                hx-target="#battle-layout"
+                                hx-swap="outerHTML"
                                 class="w-10 h-10 border border-black text-center {{ implode(' ', $value['options']) }}">{{ $value['value'] }}</a>
                         @endforeach
                     </div>

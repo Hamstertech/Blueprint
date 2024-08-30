@@ -14,6 +14,7 @@ class BattleshipController extends Controller
         protected CreateBattleshipLayout $createBattleshipLayout,
         protected CreateAttackAction $createAttackAction,
         protected CreateDefenceAction $createDefenceAction,
+        protected DetermineUsersTurn $determineUsersTurn,
     ) {
     }
 
@@ -21,20 +22,22 @@ class BattleshipController extends Controller
     {
         $gameState = $this->createBattleshipLayout->execute();
 
-        return view('battleship-layout', ['map' => $gameState]);
+        $turn = $this->determineUsersTurn->execute();
+
+        return view('battleship-layout', ['map' => $gameState, 'your_turn' => $turn]);
     }
 
     public function attackBattleship(HtmxRequest $request)
     {
         $map = $this->createAttackAction->execute($request->getTriggerId());
 
-        return view('battleship-attack', ['attack_map' => $map]);
+        return view('battleship-layout', ['map' => $map]);
     }
 
     public function defendBattleship(HtmxRequest $request)
     {
         $map = $this->createDefenceAction->execute();
 
-        return view('battleship-defend', ['defence_map' => $map]);
+        return view('battleship-layout', ['map' => $map]);
     }
 }

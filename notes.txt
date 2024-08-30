@@ -1,2 +1,8 @@
 Telegram bot:
 https://www.perplexity.ai/search/using-laravel-framework-i-want-TrL5TzbPSsur6oCVrjKocg
+
+
+TODO:
+ - Need to make a "connection" endpoint
+ - Need to make a "censor fields" function
+ - Need to determine whos turn it is (create function where it flips the "turn")
