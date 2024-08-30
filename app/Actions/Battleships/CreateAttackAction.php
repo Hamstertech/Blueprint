@@ -9,7 +9,7 @@ use App\Models\Player;
 
 class CreateAttackAction extends GameState
 {
-    public function execute(string $fieldId): array
+    public function execute(string $fieldId): Game
     {
         /** @var Player $player */
         $player = Player::firstOrCreate([
@@ -32,6 +32,6 @@ class CreateAttackAction extends GameState
             $game->save();
         }
 
-        return $game->fresh()->game_state;
+        return $game->fresh();
     }
 }

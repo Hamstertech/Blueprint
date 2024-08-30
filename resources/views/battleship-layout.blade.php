@@ -7,11 +7,13 @@
                     <div class="grid grid-cols-11 content-center">
                         @foreach($board as $key => $value)
                             <a id="A{{ $loop->iteration }}"
-                                hx-get="{{ route('game.battleship.attack') }}"
+                                @if($your_turn)
+                                    hx-get="{{ route('game.battleship.attack') }}"
+                                @endif
                                 hx-trigger="click"
                                 hx-target="#battle-layout"
                                 hx-swap="outerHTML"
-                                class="w-10 h-10 border border-black text-center {{ implode(' ', $value['options']) }}">{{ $value['value'] }}</a>
+                                class="{{ $your_turn ? '' : 'bg-slate-600'}} w-10 h-10 border border-black text-center {{ implode(' ', $value['options']) }}">{{ $value['value'] }}</a>
                         @endforeach
                     </div>
                 </div>

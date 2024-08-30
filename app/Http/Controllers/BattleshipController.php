@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Battleships\CreateAttackAction;
 use App\Actions\Battleships\CreateBattleshipLayout;
 use App\Actions\Battleships\CreateDefenceAction;
+use App\Actions\Battleships\DetermineUserTurn;
 use Illuminate\View\View;
 use Mauricius\LaravelHtmx\Http\HtmxRequest;
 
@@ -14,27 +15,27 @@ class BattleshipController extends Controller
         protected CreateBattleshipLayout $createBattleshipLayout,
         protected CreateAttackAction $createAttackAction,
         protected CreateDefenceAction $createDefenceAction,
-        protected DetermineUsersTurn $determineUsersTurn,
+        protected DetermineUserTurn $determineUsersTurn,
     ) {
     }
 
     public function newGameBattleship(HtmxRequest $request): View
     {
-        $gameState = $this->createBattleshipLayout->execute();
+        $game = $this->createBattleshipLayout->execute();
+        $turn = $this->determineUsersTurn->execute($game);
 
-        $turn = $this->determineUsersTurn->execute();
-
-        return view('battleship-layout', ['map' => $gameState, 'your_turn' => $turn]);
+        return view('battleship-layout', ['map' => $game->game_state, 'your_turn' => $turn]);
     }
 
-    public function attackBattleship(HtmxRequest $request)
+    public function attackBattleship(HtmxRequest $request): View
     {
-        $map = $this->createAttackAction->execute($request->getTriggerId());
+        $game = $this->createAttackAction->execute($request->getTriggerId());
+        $turn = $this->determineUsersTurn->execute($game);
 
-        return view('battleship-layout', ['map' => $map]);
+        return view('battleship-layout', ['map' => $game->game_state, 'your_turn' => $turn]);
     }
 
-    public function defendBattleship(HtmxRequest $request)
+    public function defendBattleship(HtmxRequest $request): View
     {
         $map = $this->createDefenceAction->execute();
 

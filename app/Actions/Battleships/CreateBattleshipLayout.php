@@ -9,7 +9,7 @@ use App\Models\Player;
 
 class CreateBattleshipLayout extends GameState
 {
-    public function execute(): array
+    public function execute(): Game
     {
         /** @var Player $player1 */
         $player1 = Player::firstOrCreate([
@@ -21,18 +21,19 @@ class CreateBattleshipLayout extends GameState
         ]);
         $games = $player1->sharedGamesWith($player2, GameTypeEnum::BATTLESHIP);
         if (!empty($games)) {
-            $map = $games->latest()->first()->game_state;
+            $game = $games->latest()->first();
         } else {
             $map = $this->gameState($player1, $player2);
             $newGame = new Game;
             $newGame->game_type = GameTypeEnum::BATTLESHIP;
             $newGame->game_state = $map;
             $newGame->save();
-
             $newGame->linkPlayers($player1, $player2);
+
+            $game = $newGame->fresh();
         }
 
-        return $map;
+        return $game;
     }
 
     protected function gameState(Player $player1, Player $player2): array
