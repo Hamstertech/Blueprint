@@ -25,7 +25,7 @@ class CreateAttackAction extends GameState
         } elseif (in_array($gameState['board'][$opponent_id][$cleanFieldId]['value'], [''])) {
             $gameState['board'][$opponent_id][$cleanFieldId]['value'] = 'X';
         }
-        // $gameState['turn'] = $opponent_id;
+        // $gameState['turn'] = $opponent_id; // TODO: Enable to finish
         $game->game_state = $gameState;
         $game->save();
 
