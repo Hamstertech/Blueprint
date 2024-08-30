@@ -16,6 +16,7 @@ class DetermineUserTurn extends GameState
         } else {
             $turn = false;
         }
+
         return $turn;
     }
 }

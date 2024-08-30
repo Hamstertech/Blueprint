@@ -20,7 +20,7 @@ class CreateBattleshipLayout extends GameState
             'session_id' => 'tester',
         ]);
         $games = $player1->sharedGamesWith($player2, GameTypeEnum::BATTLESHIP);
-        if (!empty($games)) {
+        if (! empty($games)) {
             $game = $games->latest()->first();
         } else {
             $map = $this->gameState($player1, $player2);

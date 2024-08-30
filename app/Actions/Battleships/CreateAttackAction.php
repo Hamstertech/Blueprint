@@ -22,15 +22,12 @@ class CreateAttackAction extends GameState
         $cleanFieldId = ltrim($fieldId, 'A');
         if (in_array($gameState['board'][$opponent_id][$cleanFieldId]['value'], array_keys(parent::ships()))) {
             $gameState['board'][$opponent_id][$cleanFieldId]['value'] = 'O';
-            // $gameState['turn'] = $opponent_id;
-            $game->game_state = $gameState;
-            $game->save();
         } elseif (in_array($gameState['board'][$opponent_id][$cleanFieldId]['value'], [''])) {
             $gameState['board'][$opponent_id][$cleanFieldId]['value'] = 'X';
-            // $gameState['turn'] = $opponent_id;
-            $game->game_state = $gameState;
-            $game->save();
         }
+        // $gameState['turn'] = $opponent_id;
+        $game->game_state = $gameState;
+        $game->save();
 
         return $game->fresh();
     }
