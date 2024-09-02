@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->nullable();
             $table->string('session_id');
+            $table->string('searching')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

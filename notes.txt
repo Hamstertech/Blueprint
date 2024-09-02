@@ -3,6 +3,9 @@ https://www.perplexity.ai/search/using-laravel-framework-i-want-TrL5TzbPSsur6oCV
 
 
 TODO:
- - Need to make a "connection" endpoint
- - Need to make a "censor fields" function
- - Need to determine whos turn it is (create function where it flips the "turn")
+ DONE - Need to make a "connection" endpoint
+        - Need to determine how the connection works
+        - A user needs a "searching" status
+        - Need a way to determine if a user is still looking for opponent
+ DONE - Need to make a "censor fields" function
+ DONE - Need to determine whos turn it is (create function where it flips the "turn")

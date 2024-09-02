@@ -10,7 +10,6 @@ class DetermineUserTurn extends GameState
     public function execute(Game $game): bool
     {
         $players = $game->players;
-        $turn = $game->game_state['turn'];
         if ($players->where('session_id', session()->getId())->first()->id === $game->game_state['turn']) {
             $turn = true;
         } else {
