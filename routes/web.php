@@ -25,4 +25,4 @@ Route::get('/information', function () {
 
 Route::get('/game/battleship/connect', [BattleshipController::class, 'connectBattleshipPlayers'])->name('game.battleship.connect');
 Route::get('/game/battleship/attack', [BattleshipController::class, 'attackBattleship'])->name('game.battleship.attack');
-Route::get('/game/battleship/generate', [BattleshipController::class, 'newGameBattleship'])->name('game.battleship.generate');
+// Route::get('/game/battleship/generate', [BattleshipController::class, 'newGameBattleship'])->name('game.battleship.generate');

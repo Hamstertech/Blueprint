@@ -22,14 +22,14 @@ class BattleshipController extends Controller
     ) {
     }
 
-    public function newGameBattleship(HtmxRequest $request): View
-    {
-        $game = $this->createBattleshipLayout->execute();
-        $turn = $this->determineUsersTurn->execute($game);
-        $cleanedMap = $this->hideMapAction->execute($game);
+    // public function newGameBattleship(HtmxRequest $request): View
+    // {
+    //     $game = $this->createBattleshipLayout->execute();
+    //     $turn = $this->determineUsersTurn->execute($game);
+    //     $cleanedMap = $this->hideMapAction->execute($game);
 
-        return view('battleship-layout', ['map' => $cleanedMap, 'your_turn' => $turn]);
-    }
+    //     return view('battleship-layout', ['map' => $cleanedMap, 'your_turn' => $turn]);
+    // }
 
     public function attackBattleship(HtmxRequest $request): View
     {
