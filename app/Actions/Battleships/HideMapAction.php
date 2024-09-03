@@ -16,6 +16,9 @@ class HideMapAction extends GameState
         ]);
         $opponent_id = $game->players()->wherePivot('player_id', '!=', $player->id)->first()->id;
         $map['board'][$opponent_id] = $this->cleanMap($map['board'][$opponent_id]);
+        $personal_board = $map['board'][$player->id];
+        unset($map['board'][$player->id]);
+        $map['board'][$player->id] = $personal_board;
 
         return $map;
     }
