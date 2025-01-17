@@ -24,7 +24,5 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => Hash::make('testpassword1'),
         ]);
-
-        User::factory()->guest()->count(15)->creat();
     }
 }
